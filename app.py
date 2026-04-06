@@ -16,12 +16,20 @@ ADMIN_ID = os.getenv("ADMIN_ID", "admin@id")
 ADMIN_PASS = os.getenv("ADMIN_PASS", "admin@pass")
 
 # ---------------- FIREBASE SETUP ----------------
-cred = credentials.Certificate("firebase-key.json")
+import json
+
+firebase_json = json.loads(os.getenv("FIREBASE_KEY"))
+cred = credentials.Certificate(firebase_json)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # ---------------- DIALOGFLOW SETUP ----------------
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "dialogflow-key.json"
+dialogflow_json = json.loads(os.getenv("DIALOGFLOW_KEY"))
+
+with open("dialogflow_temp.json", "w") as f:
+    json.dump(dialogflow_json, f)
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "dialogflow_temp.json"
 
 PROJECT_ID = "my-chatbot-rvye"   # 🔴 my dialogflow project ID
 
