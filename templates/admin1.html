@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="admin-page">
+
+
+  <h2>Admin Dashboard</h2>
+  <a href="/logout">
+    <button>Logout</button>
+  </a>
+
+
+<h3>Chat History</h3>
+<a href="/clear-chats">
+  <button>🗑 Clear All Chats</button>
+</a>
+
+<table border="1">
+<tr>
+  <th>User</th>
+  <th>Bot</th>
+</tr>
+
+{% for chat in chats %}
+<tr>
+  <td>{{ chat.user }}</td>
+  <td>{{ chat.bot }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>

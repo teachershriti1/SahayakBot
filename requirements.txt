@@ -1,0 +1,6 @@
+flask
+firebase-admin
+google-cloud-dialogflow
+gunicorn
+python-dotenv
+pandas

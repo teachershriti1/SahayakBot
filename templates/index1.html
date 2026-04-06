@@ -1,0 +1,186 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<title>SahayakBot</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, pink,white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Container */
+.container {
+  background:lightpink;
+  width: 420px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* Title */
+h2 {
+  margin-bottom: 15px;
+}
+
+
+
+/* Chatbox */
+#chatbox {
+  height: 350px;
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  margin-bottom: 15px;
+}
+
+/* Message wrapper */
+.message {
+  margin: 8px 0;
+  display: block;
+}
+
+/* User message */
+.user {
+  background:lightpink;
+  color: white;
+  padding: 10px;
+  border-radius: 15px 15px 0 15px;
+
+  display: inline-block;   
+  max-width: 70%;
+  word-wrap: break-word;
+
+}
+
+/* bot message */
+.bot {
+  background: lightblue;
+  padding: 10px;
+  border-radius: 15px 15px 15px 0;
+ 
+  display: inline-block;   
+  max-width: 70%;
+  word-wrap: break-word;
+ 
+}
+
+/* Input area */
+.input-area {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background: lightblue;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #5a67d8;
+  transform: scale(1.1);
+}
+
+/* 📱 Mobile optimization */
+@media (max-width: 500px) {
+  .container {
+    padding: 15px;
+  }
+
+  #chatbox {
+    height: 55vh;
+  }
+
+  input {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 16px;
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>
+    👧🏻<span style="color:#333;">Sahayak</span><span style="color:purple">Bot</span>
+  </h2>
+  
+  <div id="chatbox"></div>
+
+  <div class="input-area">
+    <input id="msg" placeholder="Type your message...">
+    <button onclick="send()">⮞</button>
+  </div>
+
+</div>
+
+<script>
+async function send() {
+  let inputBox = document.getElementById("msg");
+  let msg = inputBox.value;
+
+  if (!msg.trim()) return;
+
+  let chatbox = document.getElementById("chatbox");
+
+  // ✅ User message + line break
+  chatbox.innerHTML += `
+    <div class="message user"><b>You:</b> ${msg}</div><br>
+  `;
+
+  let res = await fetch("/chat", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({message: msg})
+  });
+
+  let data = await res.json();
+
+  // ✅ Bot message + line break
+  chatbox.innerHTML += `
+    <div class="message bot"><b>Bot:</b> ${data.reply}</div><br>
+  `;
+
+  inputBox.value = "";
+
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+/* ENTER KEY SUPPORT */
+document.getElementById("msg").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    send();
+  }
+});
+</script>
+
+</body>
+</html>

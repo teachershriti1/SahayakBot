@@ -1,0 +1,67 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<title>SahayakBot</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+<a href="/admin-login" style="font-size:14px; color:blue;">Admin Login</a>
+  <h2>
+    👧🏻<span style="color:#333;">Sahayak</span><span style="color:purple">Bot</span>
+  </h2>
+  
+  <div id="chatbox"></div>
+
+  <div class="input-area">
+    <input id="msg" placeholder="Type your message...">
+    <button onclick="send()">⮞</button>
+  </div>
+
+</div>
+
+<script>
+async function send() {
+  let inputBox = document.getElementById("msg");
+  let msg = inputBox.value;
+
+  if (!msg.trim()) return;
+
+  let chatbox = document.getElementById("chatbox");
+
+  // User message + line break
+  chatbox.innerHTML += `
+    <div class="message user"><b>You:</b> ${msg}</div><br>
+  `;
+
+  let res = await fetch("/chat", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({message: msg})
+  });
+
+  let data = await res.json();
+
+  //  Bot message + line break
+  chatbox.innerHTML += `
+    <div class="message bot"><b>Bot:</b> ${data.reply}</div><br>
+  `;
+
+  inputBox.value = "";
+
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+/* ENTER KEY SUPPORT */
+document.getElementById("msg").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    send();
+  }
+});
+</script>
+
+</body>
+</html>
