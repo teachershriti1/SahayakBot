@@ -5,7 +5,8 @@ from google.cloud import dialogflow
 import os
 from collections import Counter
 import uuid
-from datetime import datetime  
+from datetime import datetime 
+from twilio.twiml.messaging_response import MessagingResponse 
 
 app = Flask(__name__)
 
@@ -151,6 +152,30 @@ def clear_chats():
         db.collection("chats").document(chat.id).delete()
 
     return redirect('/admin')
+
+#whatsapp route
+@app.route('/whatsapp', methods=['POST'])
+def whatsapp():
+    incoming_msg = request.form.get('Body')
+    user_number = request.form.get('From')
+
+    if not incoming_msg:
+        return "No message"
+
+    # 🔥 use Dialogflow (same function you already have)
+    bot_reply = detect_intent(incoming_msg, user_number)
+
+    if not bot_reply:
+        bot_reply = "Sorry, I didn't understand."
+
+    # 🔥 format response (line breaks fix)
+    bot_reply = bot_reply.replace("\n", "\n")
+
+    # Twilio response
+    resp = MessagingResponse()
+    resp.message(bot_reply)
+
+    return str(resp)
 
 # Logout route
 @app.route('/logout')
