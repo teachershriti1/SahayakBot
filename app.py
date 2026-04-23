@@ -153,6 +153,12 @@ def clear_chats():
 
     return redirect('/admin')
 
+# Logout route
+@app.route('/logout')
+def logout():
+    session.pop('admin', None)
+    return redirect('/')
+
 #whatsapp route
 @app.route('/whatsapp', methods=['POST'])
 def whatsapp():
@@ -176,12 +182,6 @@ def whatsapp():
     resp.message(bot_reply)
 
     return str(resp)
-
-# Logout route
-@app.route('/logout')
-def logout():
-    session.pop('admin', None)
-    return redirect('/')
 
 # ---------------- RUN ----------------
 if __name__ == '__main__':
