@@ -15,10 +15,12 @@
   </a>
 
 
-<h3>Chat History</h3>
+
 <a href="/clear-chats">
   <button>🗑 Clear All Chats</button>
 </a>
+
+<h3>Chat History</h3>
 
 <table border="1">
 <tr>
@@ -36,6 +38,44 @@
 {% endfor %}
 
 </table>
+
+<!-- Analytics Section -->
+
+<div class="analytics-container">
+
+    <h2>Analytics</h2>
+
+    <div class="analytics-cards">
+
+        <!-- Total Queries Card -->
+        <div class="analytics-card">
+
+            <h3>Total Queries</h3>
+
+            <p>{{ total_chats }}</p>
+
+        </div>
+
+        <!-- Top Queries Card -->
+        <div class="analytics-card">
+
+            <h3>Top Queries</h3>
+
+            <ul class="query-list">
+
+                {% for query, count in top_queries %}
+
+                    <li>{{ query }} - {{ count }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>

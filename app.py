@@ -96,21 +96,40 @@ def chat():
     return jsonify({"reply": bot_reply})
 
 # Admin Dashboard
+from collections import Counter
+
 @app.route('/admin')
 def admin():
-    if not session.get('admin'):
-        return redirect('/admin-login')
 
-    chats = db.collection("chats").stream()
+    chats_ref = db.collection('chats').stream()
 
-    #  sort latest first
-    chat_list = sorted(
-        [c.to_dict() for c in chats],
-        key=lambda x: x.get("time", ""),
-        reverse=True
+    chats = []
+    query_list = []
+
+    for chat in chats_ref:
+
+        data = chat.to_dict()
+
+        chats.append(data)
+
+        # collect user queries
+        if 'user' in data:
+            query_list.append(data['user'].lower())
+
+    # total queries
+    total_chats = len(query_list)
+
+    # top 5 queries
+    counter = Counter(query_list)
+
+    top_queries = counter.most_common(5)
+
+    return render_template(
+        'admin.html',
+        chats=chats,
+        total_chats=total_chats,
+        top_queries=top_queries
     )
-
-    return render_template("admin.html", chats=chat_list)
 
 # Analytics API
 @app.route('/analytics')
